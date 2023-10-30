@@ -1,15 +1,20 @@
 import React, { useState } from "react";
 import { TextField, Button } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { addMessage } from "./redux/actions";
+import { addMessage, setUser } from "./redux/actions";
 
-function ChatInput() {
+function ChatInput({ setUsername, username }) {
   const [input, setInput] = useState("");
   const dispatch = useDispatch();
 
   const handleSubmit = () => {
     if (!input) return;
-    dispatch(addMessage({ user: "User", text: input }));
+    if (!username) {
+      dispatch(setUser(input));
+      setUsername(input);
+    } else {
+      dispatch(addMessage({ user: username, text: input }));
+    }
     setInput("");
   };
 
@@ -25,7 +30,7 @@ function ChatInput() {
         variant="outlined"
         margin="normal"
         fullWidth
-        label={"Type a message..."}
+        label={!username ? "Enter your username" : "Type a message..."}
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyPress={handleKeyPress}
@@ -37,7 +42,7 @@ function ChatInput() {
         onClick={handleSubmit}
         style={{ marginTop: "10px" }}
       >
-        Send
+        {username ? "Send" : "Set Username"}
       </Button>
     </div>
   );

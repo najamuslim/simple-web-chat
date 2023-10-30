@@ -5,6 +5,13 @@ export const addMessage = (message) => {
   };
 };
 
+export const setUser = (username) => {
+  return {
+    type: "SET_USER",
+    payload: username,
+  };
+};
+
 export const setMessages = (messages) => {
   return {
     type: "SET_MESSAGES",
