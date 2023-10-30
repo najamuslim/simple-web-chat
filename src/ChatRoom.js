@@ -1,14 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ChatWindow from "./ChatWindow";
 import ChatInput from "./ChatInput";
 import { Container, Paper, Typography } from "@mui/material";
 import { Provider } from "react-redux";
 import store from "./redux/store";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setMessages } from "./redux/actions";
 
 function ChatRoom() {
   const user = useSelector((state) => state.user);
   const [username, setUsername] = useState(user);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Load messages from local storage when the component mounts
+    const storedMessages =
+      JSON.parse(localStorage.getItem("chatMessages")) || [];
+    dispatch(setMessages(storedMessages));
+  }, [dispatch]);
 
   if (!user) {
     return (
