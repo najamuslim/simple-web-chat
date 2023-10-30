@@ -1,11 +1,22 @@
 import React, { useState } from "react";
 import { TextField, Button } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { addMessage } from "./redux/actions";
 
 function ChatInput() {
   const [input, setInput] = useState("");
+  const dispatch = useDispatch();
 
   const handleSubmit = () => {
-    console.log("sending message");
+    if (!input) return;
+    dispatch(addMessage({ user: "User", text: input }));
+    setInput("");
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSubmit();
+    }
   };
 
   return (
@@ -17,6 +28,7 @@ function ChatInput() {
         label={"Type a message..."}
         value={input}
         onChange={(e) => setInput(e.target.value)}
+        onKeyPress={handleKeyPress}
       />
       <Button
         variant="contained"
