@@ -10,7 +10,15 @@ function ChatWindow({ username }) {
   const user = useSelector((state) => state.user);
 
   useEffect(() => {
-    localStorage.setItem("chatMessages", JSON.stringify(messages));
+    const handleStorageChange = () => {
+      setVisibleMessages((prev) => Math.min(prev + pageSize, messages.length));
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
   }, [messages]);
 
   useScroll(() => {

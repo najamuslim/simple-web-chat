@@ -13,10 +13,18 @@ function ChatRoom() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Load messages from local storage when the component mounts
-    const storedMessages =
-      JSON.parse(localStorage.getItem("chatMessages")) || [];
-    dispatch(setMessages(storedMessages));
+    const handleStorageChange = (event) => {
+      if (event.key === "chatMessages") {
+        const storedMessages = JSON.parse(event.newValue);
+        dispatch(setMessages(storedMessages));
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
   }, [dispatch]);
 
   if (!user) {
